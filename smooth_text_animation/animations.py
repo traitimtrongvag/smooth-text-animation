@@ -7,15 +7,18 @@ import sys
 import time
 import random
 
+from .utils import validate_delay, colorize_text, clear_line
+
 
 def animated_line(text, delay=0.05):
     """
-    Typing effect animation from left to right
-    
+    Typing effect animation from left to right.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each character (seconds).
     """
+    delay = validate_delay(delay)
     for i in range(len(text) + 1):
         sys.stdout.write("\r" + text[:i])
         sys.stdout.flush()
@@ -25,17 +28,22 @@ def animated_line(text, delay=0.05):
 
 def animated_line_dual(text, delay=0.1):
     """
-    Animation appearing from both sides to center
-    
+    Animation appearing from both sides to center.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each step (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each step (seconds).
     """
+    delay = validate_delay(delay)
     length = len(text)
     for i in range(length // 2 + 1):
         left_part = text[:i]
         right_part = text[length - i:]
-        sys.stdout.write("\r" + left_part + " " * (length - len(left_part) - len(right_part)) + right_part)
+        sys.stdout.write(
+            "\r" + left_part
+            + " " * (length - len(left_part) - len(right_part))
+            + right_part
+        )
         sys.stdout.flush()
         time.sleep(delay)
     print()
@@ -43,16 +51,16 @@ def animated_line_dual(text, delay=0.1):
 
 def fade_in_text(text, delay=0.2):
     """
-    Text fade-in effect from dim to bright
-    
+    Text fade-in effect from dim to bright.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between brightness levels (seconds)
+        text (str): Text to display.
+        delay (float): Delay between brightness levels (seconds).
     """
+    delay = validate_delay(delay)
     brightness_levels = [90, 37, 97]
-    
     for level in brightness_levels:
-        sys.stdout.write(f"\033[{level}m{text}\033[0m\r")
+        sys.stdout.write(f"\r{colorize_text(text, level)}")
         sys.stdout.flush()
         time.sleep(delay)
     print(text)
@@ -60,16 +68,17 @@ def fade_in_text(text, delay=0.2):
 
 def marquee_text(text, width=30, delay=0.1):
     """
-    Scrolling text effect from right to left
-    
+    Scrolling text effect from right to left.
+
     Args:
-        text (str): Text to display
-        width (int): Display screen width
-        delay (float): Delay between each step (seconds)
+        text (str): Text to display.
+        width (int): Display screen width.
+        delay (float): Delay between each step (seconds).
     """
+    delay = validate_delay(delay)
     padded_text = " " * width + text + " " * width
     for i in range(len(padded_text) - width + 1):
-        sys.stdout.write("\r" + padded_text[i:i+width])
+        sys.stdout.write("\r" + padded_text[i:i + width])
         sys.stdout.flush()
         time.sleep(delay)
     print()
@@ -77,13 +86,14 @@ def marquee_text(text, width=30, delay=0.1):
 
 def wave_text(text, delay=0.1, repeat=3):
     """
-    Loading effect with dots
-    
+    Loading effect with dots.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each step (seconds)
-        repeat (int): Number of times to repeat the effect
+        text (str): Text to display.
+        delay (float): Delay between each step (seconds).
+        repeat (int): Number of times to repeat the effect.
     """
+    delay = validate_delay(delay)
     wave = ["", ".", "..", "..."]
     for _ in range(repeat):
         for w in wave:
@@ -95,13 +105,14 @@ def wave_text(text, delay=0.1, repeat=3):
 
 def blinking_text(text, repeat=5, delay=0.3):
     """
-    Blinking warning effect
-    
+    Blinking warning effect.
+
     Args:
-        text (str): Text to display
-        repeat (int): Number of blinks
-        delay (float): Delay between each blink (seconds)
+        text (str): Text to display.
+        repeat (int): Number of blinks.
+        delay (float): Delay between each blink (seconds).
     """
+    delay = validate_delay(delay)
     for _ in range(repeat):
         sys.stdout.write("\r" + text)
         sys.stdout.flush()
@@ -114,12 +125,13 @@ def blinking_text(text, repeat=5, delay=0.3):
 
 def random_fill(text, delay=0.1):
     """
-    Characters appear randomly one by one
-    
+    Characters appear randomly one by one.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each character (seconds).
     """
+    delay = validate_delay(delay)
     result = [" "] * len(text)
     indices = list(range(len(text)))
     while indices:
@@ -134,12 +146,13 @@ def random_fill(text, delay=0.1):
 
 def reverse_text(text, delay=0.2):
     """
-    Text appears from right to left
-    
+    Text appears from right to left.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each character (seconds).
     """
+    delay = validate_delay(delay)
     reversed_text = text[::-1]
     for i in range(len(text) + 1):
         sys.stdout.write("\r" + reversed_text[:i][::-1])
@@ -150,13 +163,14 @@ def reverse_text(text, delay=0.2):
 
 def rotate_text(text, delay=0.2, cycles=10):
     """
-    Loading effect with rotating characters | / - \\
-    
+    Loading effect with rotating characters | / - \\.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
-        cycles (int): Number of times to repeat the effect
+        text (str): Text to display.
+        delay (float): Delay between each frame (seconds).
+        cycles (int): Number of complete rotation cycles.
     """
+    delay = validate_delay(delay)
     rotations = ["|", "/", "-", "\\"]
     for _ in range(cycles):
         for rot in rotations:
@@ -167,9 +181,7 @@ def rotate_text(text, delay=0.2, cycles=10):
 
 
 def _animated_fade_dual(text, delay=0.1):
-    """
-    Fade-in effect appearing from both ends to center
-    """
+    """Fade-in effect appearing from both ends to center."""
     length = len(text)
     brightness_levels = [90, 37, 97]
     num_brightness_levels = len(brightness_levels)
@@ -178,70 +190,71 @@ def _animated_fade_dual(text, delay=0.1):
         brightness = brightness_levels[min(i, num_brightness_levels - 1)]
         left_part = text[:i]
         right_part = text[length - i:]
-        
-        sys.stdout.write("\r\033[K")
+        clear_line()
         sys.stdout.write(
-            f"\033[{brightness}m" + left_part + " " * (length - len(left_part) - len(right_part)) + right_part + "\033[0m"
+            f"\033[{brightness}m"
+            + left_part
+            + " " * (length - len(left_part) - len(right_part))
+            + right_part
+            + "\033[0m"
         )
         sys.stdout.flush()
         time.sleep(delay)
 
 
 def _fade_out_dual(text, delay=0.1):
-    """
-    Fade-out effect disappearing from center to both ends
-    """
+    """Fade-out effect disappearing from center to both ends."""
     length = len(text)
     for i in range(length // 2 + 1):
         left_part = text[:length // 2 - i]
         right_part = text[length // 2 + i:]
-        
-        sys.stdout.write("\r\033[K")
+        clear_line()
         sys.stdout.write(
-            left_part + " " * (length - len(left_part) - len(right_part)) + right_part
+            left_part
+            + " " * (length - len(left_part) - len(right_part))
+            + right_part
         )
         sys.stdout.flush()
         time.sleep(delay)
-    sys.stdout.write("\r\033[K")
-    sys.stdout.flush()
+    clear_line()
 
 
 def combined_animation_simultaneous(text, delay=0.1, pause=0.5):
     """
-    Combined appear and disappear effect (both sides)
-    
+    Combined appear and disappear effect (both sides).
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each step (seconds)
-        pause (float): Pause time between fade-in and fade-out (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each step (seconds).
+        pause (float): Pause time between fade-in and fade-out (seconds).
     """
-    _animated_fade_dual(text, delay=delay)
-    time.sleep(pause)
-    _fade_out_dual(text, delay=delay)
-    
+    _animated_fade_dual(text, delay=validate_delay(delay))
+    time.sleep(validate_delay(pause))
+    _fade_out_dual(text, delay=validate_delay(delay))
+
+
 def glitch_text(text, delay=0.05, intensity=3):
     """
-    Glitch effect with random character replacements
-    
+    Digital glitch effect with random character swaps.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between glitch frames (seconds)
-        intensity (int): Number of glitch iterations
+        text (str): Text to display.
+        delay (float): Delay between glitch frames (seconds).
+        intensity (int): Number of glitch iterations before resolving.
     """
+    delay = validate_delay(delay)
     glitch_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
-    
+
     for _ in range(intensity):
         glitched = list(text)
-        num_glitches = random.randint(1, len(text) // 3)
-        
+        num_glitches = random.randint(1, max(1, len(text) // 3))
         for _ in range(num_glitches):
             pos = random.randint(0, len(text) - 1)
             glitched[pos] = random.choice(glitch_chars)
-        
         sys.stdout.write("\r" + "".join(glitched))
         sys.stdout.flush()
         time.sleep(delay)
-    
+
     sys.stdout.write("\r" + text)
     sys.stdout.flush()
     print()
@@ -249,16 +262,16 @@ def glitch_text(text, delay=0.05, intensity=3):
 
 def rainbow_text(text, delay=0.1):
     """
-    Rainbow color effect cycling through ANSI colors
-    
+    Cycles through rainbow colors using ANSI codes.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between color changes (seconds)
+        text (str): Text to display.
+        delay (float): Delay between color changes (seconds).
     """
+    delay = validate_delay(delay)
     colors = [31, 33, 32, 36, 34, 35]  # Red, Yellow, Green, Cyan, Blue, Magenta
-    
     for color in colors:
-        sys.stdout.write(f"\r\033[{color}m{text}\033[0m")
+        sys.stdout.write(f"\r{colorize_text(text, color)}")
         sys.stdout.flush()
         time.sleep(delay)
     print()
@@ -266,15 +279,16 @@ def rainbow_text(text, delay=0.1):
 
 def matrix_reveal(text, delay=0.05):
     """
-    Matrix-style cascading reveal effect
-    
+    Matrix-style cascading reveal effect.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each character scramble step (seconds).
     """
+    delay = validate_delay(delay)
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%"
     result = list(text)
-    
+
     for i in range(len(text)):
         for _ in range(random.randint(3, 8)):
             temp = result.copy()
@@ -282,7 +296,6 @@ def matrix_reveal(text, delay=0.05):
             sys.stdout.write("\r" + "".join(temp))
             sys.stdout.flush()
             time.sleep(delay)
-        
         result[i] = text[i]
         sys.stdout.write("\r" + "".join(result))
         sys.stdout.flush()
@@ -291,16 +304,18 @@ def matrix_reveal(text, delay=0.05):
 
 def typewriter_advanced(text, delay=0.08, mistake_probability=0.15):
     """
-    Realistic typewriter effect with occasional mistakes and corrections
-    
+    Realistic typing with occasional mistakes and corrections.
+
     Args:
-        text (str): Text to display
-        delay (float): Base delay between characters (seconds)
-        mistake_probability (float): Probability of making a typing mistake
+        text (str): Text to display.
+        delay (float): Base delay between characters (seconds).
+        mistake_probability (float): Probability of making a typing mistake (0.0–1.0).
     """
+    delay = validate_delay(delay)
+    mistake_probability = max(0.0, min(1.0, mistake_probability))
     result = ""
     i = 0
-    
+
     while i < len(text):
         if random.random() < mistake_probability and i > 0:
             wrong_char = random.choice("qwertyuiopasdfghjklzxcvbnm")
@@ -308,54 +323,58 @@ def typewriter_advanced(text, delay=0.08, mistake_probability=0.15):
             sys.stdout.write("\r" + result)
             sys.stdout.flush()
             time.sleep(delay)
-            
+
             result = result[:-1]
             sys.stdout.write("\r" + result + " ")
             sys.stdout.flush()
             time.sleep(delay * 0.5)
-        
+
         result += text[i]
         sys.stdout.write("\r" + result)
         sys.stdout.flush()
-        time.sleep(delay + random.uniform(-0.02, 0.04))
+        # Clamp jitter so sleep is always non-negative
+        jitter = random.uniform(-0.02, 0.04)
+        time.sleep(max(0.0, delay + jitter))
         i += 1
     print()
 
 
 def bounce_text(text, delay=0.1, bounces=3):
     """
-    Bouncing animation effect using spacing
-    
+    Bouncing animation using vertical spacing.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between bounce frames (seconds)
-        bounces (int): Number of complete bounce cycles
+        text (str): Text to display.
+        delay (float): Delay between bounce frames (seconds).
+        bounces (int): Number of complete bounce cycles.
     """
+    delay = validate_delay(delay)
     heights = [0, 1, 2, 3, 2, 1, 0]
-    
+
     for _ in range(bounces):
         for height in heights:
             sys.stdout.write("\r" + "\n" * height + text + "\033[K")
             sys.stdout.flush()
             time.sleep(delay)
             if height > 0:
-                sys.stdout.write("\033[F" * height)
+                sys.stdout.write(f"\033[{height}A")
     print()
 
 
 def scramble_solve(text, delay=0.05, iterations=20):
     """
-    Scrambled text gradually solving to correct message
-    
+    Scrambled text gradually resolving to the correct message.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between solve steps (seconds)
-        iterations (int): Number of solving iterations
+        text (str): Text to display.
+        delay (float): Delay between solve steps (seconds).
+        iterations (int): Number of solving iterations.
     """
+    delay = validate_delay(delay)
     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
     current = [random.choice(chars) for _ in range(len(text))]
     solved = [False] * len(text)
-    
+
     for iteration in range(iterations):
         for i in range(len(text)):
             if not solved[i]:
@@ -364,7 +383,6 @@ def scramble_solve(text, delay=0.05, iterations=20):
                     solved[i] = True
                 else:
                     current[i] = random.choice(chars)
-        
         sys.stdout.write("\r" + "".join(current))
         sys.stdout.flush()
         time.sleep(delay)
@@ -373,21 +391,28 @@ def scramble_solve(text, delay=0.05, iterations=20):
 
 def slide_in(text, delay=0.05, direction="left"):
     """
-    Text slides in from specified direction
-    
+    Text slides in from the specified direction.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between slide steps (seconds)
-        direction (str): Direction to slide from ('left', 'right')
+        text (str): Text to display.
+        delay (float): Delay between slide steps (seconds).
+        direction (str): Direction to slide from — ``'left'`` or ``'right'``.
+
+    Raises:
+        ValueError: If *direction* is not ``'left'`` or ``'right'``.
     """
+    if direction not in ("left", "right"):
+        raise ValueError(f"direction must be 'left' or 'right', got {direction!r}")
+
+    delay = validate_delay(delay)
     length = len(text)
-    
+
     if direction == "left":
         for i in range(length + 1):
             sys.stdout.write("\r" + " " * (length - i) + text[:i])
             sys.stdout.flush()
             time.sleep(delay)
-    else:  # right
+    else:
         for i in range(length + 1):
             sys.stdout.write("\r" + text[length - i:])
             sys.stdout.flush()
@@ -397,20 +422,20 @@ def slide_in(text, delay=0.05, direction="left"):
 
 def pulse_text(text, delay=0.2, pulses=5):
     """
-    Pulsing effect using brightness and bold styling
-    
+    Pulsing brightness effect cycling dim → normal → bold.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between pulse states (seconds)
-        pulses (int): Number of pulse cycles
+        text (str): Text to display.
+        delay (float): Delay between pulse states (seconds).
+        pulses (int): Number of pulse cycles.
     """
+    delay = validate_delay(delay)
     styles = [
-        f"\033[2m{text}\033[0m",      # Dim
-        f"{text}",                      # Normal
-        f"\033[1m{text}\033[0m",       # Bold
-        f"{text}",                      # Normal
+        f"\033[2m{text}\033[0m",   # Dim
+        text,                        # Normal
+        f"\033[1m{text}\033[0m",   # Bold
+        text,                        # Normal
     ]
-    
     for _ in range(pulses):
         for style in styles:
             sys.stdout.write("\r" + style)
@@ -421,13 +446,14 @@ def pulse_text(text, delay=0.2, pulses=5):
 
 def reveal_mask(text, delay=0.1, mask_char="█"):
     """
-    Text revealed by moving mask effect
-    
+    Reveal effect with a moving mask uncovering text left to right.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between reveal steps (seconds)
-        mask_char (str): Character used for masking
+        text (str): Text to display.
+        delay (float): Delay between reveal steps (seconds).
+        mask_char (str): Character used as the mask.
     """
+    delay = validate_delay(delay)
     for i in range(len(text) + 1):
         display = text[:i] + mask_char * (len(text) - i)
         sys.stdout.write("\r" + display)
@@ -438,21 +464,16 @@ def reveal_mask(text, delay=0.1, mask_char="█"):
 
 def zigzag_text(text, delay=0.08):
     """
-    Characters appear in zigzag pattern (alternating positions)
-    
+    Characters appear in zigzag pattern — even indices first, then odd.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between each character (seconds)
+        text (str): Text to display.
+        delay (float): Delay between each character (seconds).
     """
+    delay = validate_delay(delay)
     result = [" "] * len(text)
-    indices = []
-    
-    # Create zigzag pattern
-    for i in range(0, len(text), 2):
-        indices.append(i)
-    for i in range(1, len(text), 2):
-        indices.append(i)
-    
+    indices = list(range(0, len(text), 2)) + list(range(1, len(text), 2))
+
     for idx in indices:
         result[idx] = text[idx]
         sys.stdout.write("\r" + "".join(result))
@@ -463,26 +484,26 @@ def zigzag_text(text, delay=0.08):
 
 def expanding_center(text, delay=0.1):
     """
-    Text expands outward from center character
-    
+    Text expands outward from the center character.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between expansion steps (seconds)
+        text (str): Text to display.
+        delay (float): Delay between expansion steps (seconds).
     """
+    delay = validate_delay(delay)
     center = len(text) // 2
     result = [" "] * len(text)
     result[center] = text[center]
-    
+
     sys.stdout.write("\r" + "".join(result))
     sys.stdout.flush()
     time.sleep(delay)
-    
+
     for offset in range(1, max(center, len(text) - center) + 1):
         if center - offset >= 0:
             result[center - offset] = text[center - offset]
         if center + offset < len(text):
             result[center + offset] = text[center + offset]
-        
         sys.stdout.write("\r" + "".join(result))
         sys.stdout.flush()
         time.sleep(delay)
@@ -491,15 +512,16 @@ def expanding_center(text, delay=0.1):
 
 def neon_flicker(text, delay=0.1, flickers=8):
     """
-    Neon sign flicker effect with color variations
-    
+    Neon-style flicker effect with color and brightness variation.
+
     Args:
-        text (str): Text to display
-        delay (float): Delay between flicker states (seconds)
-        flickers (int): Number of flicker events
+        text (str): Text to display.
+        delay (float): Delay between flicker states (seconds).
+        flickers (int): Number of flicker events before settling.
     """
-    neon_color = 35  # Magenta for neon effect
-    
+    delay = validate_delay(delay)
+    neon_color = 35  # Magenta
+
     for _ in range(flickers):
         if random.random() < 0.3:
             sys.stdout.write("\r" + " " * len(text))
@@ -508,7 +530,7 @@ def neon_flicker(text, delay=0.1, flickers=8):
             sys.stdout.write(f"\r\033[{brightness};{neon_color}m{text}\033[0m")
         sys.stdout.flush()
         time.sleep(delay)
-    
+
     sys.stdout.write(f"\r\033[1;{neon_color}m{text}\033[0m")
     sys.stdout.flush()
     print()
